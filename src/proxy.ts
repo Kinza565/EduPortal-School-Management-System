@@ -2,11 +2,11 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const response = NextResponse.next();
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,   
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
     {
       cookies: {
         getAll() {
@@ -26,7 +26,7 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getSession();
 
   const pathname = request.nextUrl.pathname;
-   
+
   const isPublicRoute =
     pathname === "/" ||
     pathname === "/login" ||
@@ -53,11 +53,11 @@ export async function middleware(request: NextRequest) {
       }
       if (profile?.role === "parent") {
         return NextResponse.redirect(new URL("/parent/dashboard", request.url));
-      } 
+      }
     }
     return response;
   }
- 
+
   if (!session) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
