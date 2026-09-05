@@ -111,7 +111,8 @@ export default function LoginPage() {
       const result = await login(email, password);
 
       if (result.error) {
-        setError("Invalid email or password. Please try again.");
+        console.error("Login error detail:", result.error);
+        setError("Authentication Error — " + result.error);
         setMascotState("error");
         setIsLoading(false);
         return;
